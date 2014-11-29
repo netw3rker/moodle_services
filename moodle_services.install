@@ -1,0 +1,65 @@
+<?php
+
+function moodle_services_install(){
+
+}
+
+function moodle_services_uninstall(){
+  variable_del('moodle_services_auth_token');
+  variable_del('moodle_services_url');
+  variable_del('moodle_services_service_name');
+}
+
+
+function moodle_services_schema(){
+
+  $schema['moodle_services_entity_map'] = array(
+    'fields' => array(
+      'entity' => array(
+        'description' => 'The type of entity. eg: node, user, term',
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'type' => array(
+        'description' => 'The {node_type}.type of this node.',
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'id' => array(
+        'description' => t('the id of the associated entity'),
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default'=>0,
+      ),
+      'vid' => array(
+        'description' => t('the revision id of the associated entity'),
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default'=>0,
+      ),
+      'moodle_object' => array(
+        'description' => t('The object within moodle eg Course Cohort Badge etc'),
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'object_id' => array(
+        'description' => t('the id of the moodle object'),
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => "0",
+      ),
+    ),
+    'primary key' => array('entity', 'type', 'vid'),
+//    'foreign keys' => array(),
+  );
+  return $schema;
+}

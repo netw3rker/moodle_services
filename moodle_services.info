@@ -1,0 +1,6 @@
+name = Moodle Services
+description = provides a set of actions and components to enable access webservices used in moodle
+version = 7.x-1.x
+core = 7.x
+
+files[] includes/moodle_REST.inc
