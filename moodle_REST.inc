@@ -27,7 +27,6 @@ class moodle_REST{
       $url.="&{$addedparams}";
     }
     $return=drupal_http_request($url);
-    dpm($return);
     return json_decode($return->data);
   }
 }
@@ -64,7 +63,7 @@ class moodle_cohorts extends moodle_REST{
   function enrol($cohort_idnumber, $user_idnumber){
     $members[0]['cohorttype']['type']= 'idnumber' ;
     $members[0]['cohorttype']['value']= $cohort_idnumber;
-    $members[0]['usertype']['type']= 'username';
+    $members[0]['usertype']['type']= 'idnumber';
     $members[0]['usertype']['value']= $user_idnumber;
     $request= $this->request('core_cohort_add_cohort_members', drupal_http_build_query(array('members'=>$members)) );
 
@@ -72,10 +71,9 @@ class moodle_cohorts extends moodle_REST{
   }
 
   function unenrol($cohort_idnumber, $user_idnumber){
-    $members[0]['cohorttype']['type']= 'idnumber' ;
-    $members[0]['cohorttype']['value']= $cohort_idnumber;
-    $members[0]['usertype']['type']= 'username';
-    $members[0]['usertype']['value']= $user_idnumber;
+    $members[0]['cohortid']= $cohort_idnumber;
+    $members[0]['userid']= $user_idnumber;
+    $members[0]['type']='idnumber';
     $request= $this->request('core_cohort_delete_cohort_members', drupal_http_build_query(array('members'=>$members)) );
 
     return $request;

@@ -61,7 +61,26 @@ function moodle_services_rules_action_info() {
         'type' => 'user',
         'label' => t('User'),
         'description' => t('User to add to cohort'),
-        'save' => true,
+        'save' => false,
+      ),
+    ),
+    'category' => t('Moodle Services'),
+  );
+  $items['unenrol_in_cohort'] = array(
+    'label' => t('Remove User from Cohort'),
+    'base' => 'moodle_services_cohort_unenrol',
+    'parameter' => array(
+      'node' => array(
+        'type' => '*',
+        'label' => t('Cohort Entity'),
+        'description' => t('Entity correlating to cohort'),
+        'save' => false
+      ),
+      'user' => array(
+        'type' => 'user',
+        'label' => t('User'),
+        'description' => t('User to add to cohort'),
+        'save' => false,
       ),
     ),
     'category' => t('Moodle Services'),
@@ -70,42 +89,29 @@ function moodle_services_rules_action_info() {
 }
 
 function moodle_services_create_cohort($node, $idnumber, $title, $description, $fieldselectors, RulesState $state, RulesAction $action, $command){
-  //todo: convert the nid/vid to entity values that come from an entity_load command
-  $result = db_select('moodle_services_entity_map', 'entity_map')
-    ->fields('entity_map', array('moodle_object','object_id'))
-    ->condition('entity', 'node')
-    ->condition('type', $node->type)
-    ->condition('id', $node->nid)
-    ->condition('vid', $node->vid)
-    ->execute()
-    ->fetchAssoc();
-  if(!$result['object_id']) {
-    module_load_include("inc", 'moodle_services', 'moodle_REST');
+  module_load_include("inc", 'moodle_services', 'moodle_REST');
 
-    $cohorts = new moodle_cohorts();
-    $result=$cohorts->create($idnumber, $title, $description);
-    $mapping=array(
-      'entity'=>'node',
-      'type'=>$node->type,
-      'id'=>$node->nid,
-      'vid'=>$node->vid,
-      'moodle_object'=>"cohort",
-      'object_id'=>$result[0]->id,
-    );
-    drupal_write_record('moodle_services_entity_map', $mapping);
-  }
+  $cohorts = new moodle_cohorts();
+  $result=$cohorts->create($idnumber, $title, $description);
+  $mapping=array(
+    'entity'=>'node',
+    'type'=>$node->type,
+    'id'=>$node->nid,
+    'vid'=>$node->vid,
+    'moodle_object'=>"cohort",
+    'object_id'=>$result[0]->id,
+  );
 }
 
 function moodle_services_cohort_enrol($entity, $user, $fieldselectors, RulesState $state, RulesAction $action, $command){
   module_load_include("inc", 'moodle_services', 'moodle_REST');
   $cohorts = new moodle_cohorts();
-  $cohorts->enrol($entity->nid, $user->name);
-
+  $cohorts->enrol($entity->nid, $user->uid);
 }
 
 function moodle_services_cohort_unenrol($entity, $user, $fieldselectors, RulesState $state, RulesAction $action, $command){
   module_load_include("inc", 'moodle_services', 'moodle_REST');
   $cohorts = new moodle_cohorts();
-  $cohorts->unenrol($entity->nid, $user->name);
+  $cohorts->unenrol($entity->nid, $user->uid);
 
 }

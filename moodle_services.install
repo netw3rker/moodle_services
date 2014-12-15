@@ -12,54 +12,59 @@ function moodle_services_uninstall(){
 
 
 function moodle_services_schema(){
-
-  $schema['moodle_services_entity_map'] = array(
-    'fields' => array(
-      'entity' => array(
-        'description' => 'The type of entity. eg: node, user, term',
-        'type' => 'varchar',
-        'length' => 32,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'type' => array(
-        'description' => 'The {node_type}.type of this node.',
-        'type' => 'varchar',
-        'length' => 32,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'id' => array(
-        'description' => t('the id of the associated entity'),
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default'=>0,
-      ),
-      'vid' => array(
-        'description' => t('the revision id of the associated entity'),
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default'=>0,
-      ),
-      'moodle_object' => array(
-        'description' => t('The object within moodle eg Course Cohort Badge etc'),
-        'type' => 'varchar',
-        'length' => 32,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'object_id' => array(
-        'description' => t('the id of the moodle object'),
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => "0",
-      ),
-    ),
-    'primary key' => array('entity', 'type', 'vid'),
-//    'foreign keys' => array(),
-  );
+$schema=array();
+//  $schema['moodle_services_entity_map'] = array(
+//    'fields' => array(
+//      'entity' => array(
+//        'description' => 'The type of entity. eg: node, user, term',
+//        'type' => 'varchar',
+//        'length' => 32,
+//        'not null' => TRUE,
+//        'default' => '',
+//      ),
+//      'type' => array(
+//        'description' => 'The {node_type}.type of this node.',
+//        'type' => 'varchar',
+//        'length' => 32,
+//        'not null' => TRUE,
+//        'default' => '',
+//      ),
+//      'id' => array(
+//        'description' => t('the id of the associated entity'),
+//        'type' => 'int',
+//        'unsigned' => TRUE,
+//        'not null' => TRUE,
+//        'default'=>0,
+//      ),
+//      'vid' => array(
+//        'description' => t('the revision id of the associated entity'),
+//        'type' => 'int',
+//        'unsigned' => TRUE,
+//        'not null' => TRUE,
+//        'default'=>0,
+//      ),
+//      'moodle_object' => array(
+//        'description' => t('The object within moodle eg Course Cohort Badge etc'),
+//        'type' => 'varchar',
+//        'length' => 32,
+//        'not null' => TRUE,
+//        'default' => '',
+//      ),
+//      'object_id' => array(
+//        'description' => t('the id of the moodle object'),
+//        'type' => 'int',
+//        'unsigned' => TRUE,
+//        'not null' => TRUE,
+//        'default' => "0",
+//      ),
+//    ),
+//    'primary key' => array('entity', 'type', 'vid'),
+////    'foreign keys' => array(),
+//  );
   return $schema;
+}
+
+function moodle_services_update_7002(){
+  //we stopped needing this as a result of MDL-48412
+  db_drop_table('moodle_services_entity_map');
 }
